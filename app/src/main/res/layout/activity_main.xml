@@ -37,15 +37,13 @@
         android:id="@+id/login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Log In"
-        android:onClick="home"/>
+        android:text="Log In" />
 
     <Button
         android:id="@+id/signUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="register"
-        android:text="Sign up"/>
+        android:text="Sign up" />
 
     <TextView
         android:id="@+id/forgotPassword"
