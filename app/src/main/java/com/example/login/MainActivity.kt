@@ -10,12 +10,5 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
-    fun register(view:View){
-        val intentSignup = Intent(this,SignUp::class.java)
-        startActivity(intentSignup)
-    }
-    fun home(view: View){
-        val intentHome = Intent(this,Home::class.java)
-        startActivity(intentHome)
-    }
+
 }
