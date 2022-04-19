@@ -1,4 +1,3 @@
 <resources>
     <string name="app_name">Login</string>
-    <string name="forgot_password"><a href="#">Forgot password</a></string>
 </resources>
