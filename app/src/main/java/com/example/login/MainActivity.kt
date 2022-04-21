@@ -2,6 +2,7 @@ package com.example.login
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -25,7 +26,11 @@ class MainActivity : AppCompatActivity() {
         val adapter = TodoAdapter(todolist)
         recycle.adapter = adapter
         recycle.layoutManager = LinearLayoutManager(this)
-
+        adapter.setOnClickListener(object :TodoAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                Toast.makeText(this@MainActivity,"item clicked :$position",Toast.LENGTH_LONG).show()
+            }
+        })
 
         btnAdd.setOnClickListener {
             val title = txt.text.toString()

@@ -12,11 +12,24 @@ class TodoAdapter(
     var todos:List<Todo>)
     : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
 
-    inner class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    private lateinit var _myListener : onItemClickListener
+    interface onItemClickListener{
+        fun onItemClick(position: Int)
+    }
+    fun setOnClickListener(myListener:onItemClickListener){
+        _myListener = myListener
+    }
+    inner class TodoViewHolder(itemView: View,listener:onItemClickListener) : RecyclerView.ViewHolder(itemView){
+        init {
+            itemView.setOnClickListener {
+                listener.onItemClick(adapterPosition)
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_todo,parent,false)
-        return TodoViewHolder(view)
+        return TodoViewHolder(view,_myListener)
     }
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
@@ -29,5 +42,4 @@ class TodoAdapter(
     override fun getItemCount(): Int {
         return todos.size
     }
-
 }
