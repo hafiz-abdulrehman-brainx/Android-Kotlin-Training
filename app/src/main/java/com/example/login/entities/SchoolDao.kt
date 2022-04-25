@@ -9,7 +9,6 @@ interface SchoolDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSchool(school: School)
 
-
     @Insert(onConflict = OnConflictStrategy.REPLACE) // convenience annotation
     suspend fun insertDirector(director: Director)
 
