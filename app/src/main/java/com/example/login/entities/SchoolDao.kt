@@ -23,6 +23,9 @@ interface SchoolDao {
     @Update
     suspend fun updateStudent(student: Student)
 
+    @Query("DELETE FROM student WHERE studentId like :studentId")
+    suspend fun deleteStudentWithId(studentId: Int)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE) // convenience annotation
     suspend fun insertSubject (subject: Subject)
 

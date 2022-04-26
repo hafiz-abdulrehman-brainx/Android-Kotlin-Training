@@ -32,9 +32,5 @@ abstract class SchoolDatabase:RoomDatabase() {
                 }
                 }
              }
-        fun destroyInstance():Boolean{
-            INSTANCE = null
-            return true
-            }
         }
     }

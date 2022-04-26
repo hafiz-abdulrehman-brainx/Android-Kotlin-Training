@@ -1,18 +1,17 @@
 package com.example.login
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.login.entities.*
 import com.example.login.entities.relations.StudentSubjectCrossRef
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -22,28 +21,70 @@ class MainActivity : AppCompatActivity() {
     lateinit var txtView : TextView
     lateinit var btnSearch :Button
     lateinit var dao:SchoolDao
-
+    lateinit var btnStdInsert : Button
+    lateinit var btnStdUpdate:Button
+    lateinit var btnStdDelete:Button
+    lateinit var btnSearchSubWithStu: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         dao = SchoolDatabase.getInstance(this).schoolDao
         populateDatabase()
 
-        txtField = findViewById<EditText>(R.id.txtfield)
-        txtView = findViewById<TextView>(R.id.txtView)
-        btnSearch = findViewById<Button>(R.id.searchBtn)
+        txtField = findViewById(R.id.txtfield)
+        txtView = findViewById(R.id.txtView)
+        btnSearch = findViewById(R.id.searchBtn)
+        btnStdInsert = findViewById(R.id.btnStdInsert)
+        btnStdUpdate = findViewById(R.id.btnStuUpdate)
+        btnStdDelete = findViewById(R.id.btnStuDelete)
+        btnSearchSubWithStu = findViewById(R.id.btnSearchSubjectWithStudent)
 
 
         btnSearch.setOnClickListener {
             searchStudentWithId(it)
         }
+        btnStdInsert.setOnClickListener {
+            var intent = Intent(this,InsertStudent::class.java)
+            startActivity(intent)
+        }
+        btnStdUpdate.setOnClickListener {
+            var intent = Intent(this,UpdateStudent::class.java)
+            startActivity(intent)
+        }
+        btnStdDelete.setOnClickListener {
+            deleteStudent(it)
+        }
+        btnSearchSubWithStu.setOnClickListener {
+            searchStudentSubjects(it)
+        }
+    }
+
+    private fun searchStudentSubjects(view: View) {
+        var studentId = txtField.text.toString().toInt()
+        lifecycleScope.launch{
+            var subjects= dao.getSubjectsOfStudent(studentId).last()
+            withContext(Dispatchers.Main){
+                txtView.text = subjects.subjects.first().subjectName
+            }
+        }
 
     }
 
-    fun searchStudentWithId(view: View) {
-
+    private fun deleteStudent(view: View) {
         var studentId = txtField.text.toString().toInt()
+
+        lifecycleScope.launch {
+            dao.deleteStudentWithId(studentId)
+        }
+        Toast.makeText(this,"student with id: "+studentId + " deleted" ,
+            Toast.LENGTH_SHORT).show()
+
+    }
+
+
+    private fun searchStudentWithId(view: View) {
+        var studentId = txtField.text.toString().toInt()
+
         lifecycleScope.launch {
             val student = dao.getSubjectsOfStudent(studentId).first()
             withContext(Dispatchers.Main){
@@ -52,7 +93,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
     fun populateDatabase(){
-//        var dao = SchoolDatabase.getInstance(this).schoolDao
 
         val schools = listOf(
             School(0,"abdullah grammer"),
@@ -72,15 +112,13 @@ class MainActivity : AppCompatActivity() {
         val students = listOf(
             Student(0,"mohsin",1),
             Student(0,"ayesha",1),
-            Student(0,"madeeha",1),
             Student(0,"abdullah",3),
-            Student(0,"ahsan",3),
             Student(0,"haris",2),
             Student(0,"aziz",2)
         )
         val studentSubjectRelations= listOf(
             StudentSubjectCrossRef(1,2),
-            StudentSubjectCrossRef(1,2),
+            StudentSubjectCrossRef(1,3),
             StudentSubjectCrossRef(2,1),
             StudentSubjectCrossRef(3,1),
             StudentSubjectCrossRef(4,2),
