@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import com.example.login.entities.*
@@ -20,16 +21,38 @@ class MainActivity : AppCompatActivity() {
     lateinit var txtField :EditText
     lateinit var txtView : TextView
     lateinit var btnSearch :Button
+    lateinit var dao:SchoolDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var dao = SchoolDatabase.getInstance(this).schoolDao
+        dao = SchoolDatabase.getInstance(this).schoolDao
+        populateDatabase()
 
         txtField = findViewById<EditText>(R.id.txtfield)
         txtView = findViewById<TextView>(R.id.txtView)
         btnSearch = findViewById<Button>(R.id.searchBtn)
+
+
+        btnSearch.setOnClickListener {
+            searchStudentWithId(it)
+        }
+
+    }
+
+    fun searchStudentWithId(view: View) {
+
+        var studentId = txtField.text.toString().toInt()
+        lifecycleScope.launch {
+            val student = dao.getSubjectsOfStudent(studentId).first()
+            withContext(Dispatchers.Main){
+                txtView.text = student.student.studentName
+            }
+        }
+    }
+    fun populateDatabase(){
+//        var dao = SchoolDatabase.getInstance(this).schoolDao
 
         val schools = listOf(
             School(0,"abdullah grammer"),
@@ -71,25 +94,6 @@ class MainActivity : AppCompatActivity() {
             subjects.forEach { dao.insertSubject(it) }
             students.forEach { dao.insertStudent(it) }
             studentSubjectRelations.forEach { dao.insertStudentSubjectCrossRef(it) }
-            Log.d("Database1", "onCreate: Inserted")
-
-
-        }
-        btnSearch.setOnClickListener {
-            searchStudentWithId(it)
-        }
-
-    }
-
-    fun searchStudentWithId(view: View) {
-
-        var dao = SchoolDatabase.getInstance(this).schoolDao
-        var studentId = txtField.text.toString().toInt()
-        lifecycleScope.launch {
-            val student = dao.getSubjectsOfStudent(studentId).first()
-            withContext(Dispatchers.Main){
-                txtView.text = student.student.studentName
-            }
         }
     }
 
