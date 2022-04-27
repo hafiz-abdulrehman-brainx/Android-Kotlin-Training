@@ -8,23 +8,10 @@
     android:orientation="vertical"
     android:layout_margin="20dp">
 
-    <TextView
-        android:id="@+id/txtOutput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="25dp"/>
-
     <Button
         android:id="@+id/btnClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Button" />
 
-    <FrameLayout
-        android:id="@+id/frame_layout"
-        android:name="com.example.login.mainFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        />
 </androidx.appcompat.widget.LinearLayoutCompat>
