@@ -55,6 +55,11 @@ interface SchoolDao {
     @Query("SELECT * FROM student WHERE studentId= :studentId") // query annotation
     suspend fun getSubjectsOfStudent(studentId:Int):List<StudentWithSubjects>
 
+    @Query("SELECT * from director INNER JOIN " +
+            "school ON school.schoolId = director.directorId " +
+            "INNER JOIN student on student.schoolId = school.schoolId WHERE directorId LIKE :directorId " )
+    suspend fun getAllDirectorsWithStudentsSubject(directorId:Int):Map<Director,List<Student>>
+
     @Query("DELETE FROM student")
     suspend fun deleteStudentTable()
 

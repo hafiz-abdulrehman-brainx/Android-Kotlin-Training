@@ -30,7 +30,9 @@ abstract class SchoolDatabase:RoomDatabase() {
                     .build().also {
                     INSTANCE = it
                 }
+
                 }
              }
+
         }
     }

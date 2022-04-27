@@ -3,6 +3,7 @@ package com.example.login
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -14,6 +15,7 @@ import com.example.login.entities.relations.StudentSubjectCrossRef
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Boolean.getBoolean
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,8 +30,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         dao = SchoolDatabase.getInstance(this).schoolDao
-        populateDatabase()
+
+        var sharedPref = getSharedPreferences("Database population", MODE_PRIVATE)
+        var editor = sharedPref.edit()
+        with(editor){
+            if(!sharedPref.getBoolean("database empty",false)){
+                putBoolean("database empty",true)
+                apply()
+                populateDatabase()
+            }
+            Toast.makeText(this@MainActivity,"Database populated",Toast.LENGTH_SHORT).show()
+        }
 
         txtField = findViewById(R.id.txtfield)
         txtView = findViewById(R.id.txtView)
@@ -56,6 +69,16 @@ class MainActivity : AppCompatActivity() {
         }
         btnSearchSubWithStu.setOnClickListener {
             searchStudentSubjects(it)
+//            searchDirectorWithStuSubjects(it)
+        }
+
+    }
+
+    private fun searchDirectorWithStuSubjects(view: View) {
+        var studentId = txtField.text.toString().toInt()
+        lifecycleScope.launch {
+            var directors = dao.getAllDirectorsWithStudentsSubject(studentId)
+            Log.d("Directors", directors.toString())
         }
     }
 
@@ -76,8 +99,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             dao.deleteStudentWithId(studentId)
         }
-        Toast.makeText(this,"student with id: "+studentId + " deleted" ,
-            Toast.LENGTH_SHORT).show()
+        Toast.makeText(this,"student with id: "+studentId + " deleted" ,Toast.LENGTH_SHORT).show()
 
     }
 
